@@ -33,13 +33,12 @@ namespace Archivos_XML_JSON
                     // Procesamiento de archivos XML
                     XmlDocument xmlDoc = new XmlDocument();
                     xmlDoc.Load(filePath); // Cargar el archivo XML en un objeto XmlDocument
-                    
                 }
                 else if (filePath.EndsWith(".json"))
                 {
                     // Procesamiento de archivos JSON
                     dynamic jsonContent = JsonConvert.DeserializeObject(fileContent); // Deserializar el JSON
-                    
+                    txtContenido.Text = JsonConvert.SerializeObject(jsonContent, Newtonsoft.Json.Formatting.Indented); // Mostrar el contenido JSON en el TextBox
                 }
             }
         }
@@ -53,31 +52,25 @@ namespace Archivos_XML_JSON
             {
                 string filePath = saveFileDialog.FileName;
 
-                // Guardar el contenido del TextBox en el archivo
-                File.WriteAllText(filePath, txtContenido.Text);
-                MessageBox.Show("Archivo guardado exitosamente.");
+                // Obtener el contenido del TextBox
+                string fileContent = txtContenido.Text;
 
-                // Verificar la extensión del archivo y realizar operaciones adicionales según sea necesario
-                if (filePath.EndsWith(".xml"))
-                {
-                    // Procesamiento de archivos XML
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.Load(filePath); // Cargar el archivo XML en un objeto XmlDocument
-                                           
-
-                    // Guardar el objeto XmlDocument en el archivo
-                    xmlDoc.Save(filePath); // Guardar el archivo XML con los cambios realizados
-                }
-                else if (filePath.EndsWith(".json"))
+                // Verificar si el contenido es JSON
+                if (filePath.EndsWith(".json"))
                 {
                     // Procesamiento de archivos JSON
-                    string fileContent = File.ReadAllText(filePath);
                     dynamic jsonContent = JsonConvert.DeserializeObject(fileContent); // Deserializar el JSON
-                                                                                      
+                    // Realizar cualquier edición necesaria en los datos JSON aquí
 
                     // Serializar el objeto JSON y guardarlo en el archivo
-                    string jsonOutput = JsonConvert.SerializeObject(jsonContent); // Serializar el JSON
+                    string jsonOutput = JsonConvert.SerializeObject(jsonContent, Newtonsoft.Json.Formatting.Indented); // Serializar el JSON
                     File.WriteAllText(filePath, jsonOutput); // Guardar el archivo JSON con los cambios realizados
+                }
+                else
+                {
+                    // Guardar el contenido del TextBox en el archivo
+                    File.WriteAllText(filePath, fileContent);
+                    MessageBox.Show("Archivo guardado exitosamente.");
                 }
             }
         }
